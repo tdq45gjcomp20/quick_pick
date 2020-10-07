@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Quick Pick</title>
+  </head>
+
+  <body>
+    <h1>Quick Pick</h1>
+    <script language="javascript">
+      function getRandomInt(max) {
+        return Math.floor(Math.random() * Math.floor(max)) + 1;
+      }
+
+      function isDigit(char) {
+        return char >= '0' && char <= '9';
+      }
+
+      function getNum(str, index) {
+        return parseInt(str.substring(index));
+      }
+
+      function getWinningNums() {
+        let ansStr = prompt("Please enter 5 winning numbers (from 1 to 48)");
+        let i = 0;
+
+        while (i < ansStr.length && winningNums.length < 5) {
+          if (!isDigit(ansStr.charAt(i))) {
+            while (i < ansStr.length && !isDigit(ansStr.charAt(i))) {
+              i++;
+            }
+          } else {
+            let currNum = getNum(ansStr, i);
+            if (currNum > 0 && currNum <= 48) {
+              winningNums.push(currNum);
+            }
+            while (i < ansStr.length && isDigit(ansStr.charAt(i))) {
+              i++;
+            }
+          }
+        }
+
+        if (winningNums.length != 5) {
+          alert("Wrong input, try again.");
+          winningNums = [];
+          getWinningNums();
+        } else {
+          winningNums.sort((a, b) => a - b);
+        }
+      }
+
+      function getWinningLuckyBall() {
+        while (winningLuckyBall < 1 || winningLuckyBall > 18) {
+          winningLuckyBall = parseInt(prompt("Please enter the winning lucky ball (from 1 to 18)"));
+          if (winningLuckyBall < 1 || winningLuckyBall > 18) {
+            alert("Wrong input, try again.");
+          }
+        }
+      }
+
+      function printList(list) {
+        if (list == null) {
+          return;
+        }
+        console.log("list of nums: ");
+        for (let i = 0; i < list.length; i++) {
+          document.write(" " + list[i]);
+          console.log(list[i]);
+        }
+      }
+
+      function calcPrize() {
+        let luckyBallMatch = (randLuckyBall == winningLuckyBall);
+        let match = countMatches();
+        switch (countMatches()) {
+          case 0:
+            if (luckyBallMatch) {
+              printPrize(4);
+            }
+            break;
+          case 1:
+            if (luckyBallMatch) {
+              printPrize(6);
+            }
+            break;
+          case 2:
+            if (luckyBallMatch) {
+              printPrize(25);
+              break;
+            }
+            printPrize(3);
+            break;
+          case 3:
+            if (luckyBallMatch) {
+              printPrize(150);
+              break;
+            }
+            printPrize(20);
+            break;
+          case 4:
+            if (luckyBallMatch) {
+              printPrize(5000);
+              break;
+            }
+            printPrize(200);
+            break;
+          case 5:
+            if (luckyBallMatch) {
+              printPrize("7,000 a WEEK for LIFE");
+              break;
+            }
+            printPrize("25,000 a YEAR for LIFE");
+            break;
+        }
+      }
+
+      function printPrize(amount) {
+        document.write("<p>You Win! Your payout is: $" + amount);
+        document.write("</p><br/>");
+      }
+
+      function countMatches() {
+        let count = 0;
+        let randIndex = 0;
+        let winningIndex = 0;
+        while (randIndex < randNums.length && winningIndex < winningNums.length) {
+          if (randNums[randIndex] == winningNums[winningIndex]) {
+            count++;
+            randIndex++;
+            winningIndex++;
+          } else if (randNums[randIndex] > winningNums[winningIndex]) {
+            winningIndex++;
+          } else {
+            randIndex++;
+          }
+        }
+        return count;
+      }
+      var randNums = [];
+      var randLuckyBall = getRandomInt(18);
+      var winningNums = [];
+      var winningLuckyBall = -1;
+
+      for (let i = 0; i < 5; i++) {
+        randNums.push(getRandomInt(48));
+      }
+      randNums.sort((a, b) => a - b);
+
+      document.write("<p>Quick pick numbers:");
+      printList(randNums);
+      console.log("random lucky ball : " + randLuckyBall);
+      document.write(" Lucky Ball: " + randLuckyBall);
+      document.write("</p><br/>");
+
+      getWinningNums();
+      getWinningLuckyBall();
+
+      document.write("<p>Winning numbers:");
+      printList(winningNums);
+      document.write(" Lucky Ball: " + winningLuckyBall);
+      document.write("</p><br/>");
+
+      calcPrize();
+    </script>
+  </body>
+</html>
